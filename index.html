@@ -1,14 +1,110 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProfitCoin - Crypto Trading Signals with 258% Returns</title>
     <meta name="description" content="ProfitCoin delivers premium cryptocurrency trading signals with proven 258% returns in just 4 months. Join successful traders today!">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-10px) translateX(10px); }
+            50% { transform: translateY(5px) translateX(15px); }
+            75% { transform: translateY(-5px) translateX(5px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+        .animate-float { animation: float 15s linear infinite; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div id="app"></div>
+    <script>
+        const app = document.getElementById('app');
+        
+        // Navigation component
+        const nav = document.createElement('nav');
+        nav.className = 'fixed w-full z-50 bg-gray-900/95 shadow-lg backdrop-blur-sm';
+        nav.innerHTML = `
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <span class="text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+                            ProfitCoin
+                        </span>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#features" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Features</a>
+                            <a href="#performance" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Performance</a>
+                            <a href="#pricing" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Pricing</a>
+                            <a href="#signup" class="bg-gradient-to-r from-green-500 to-green-400 text-white px-4 py-2 rounded-md text-sm font-medium hover:from-green-600 hover:to-green-500 transition-all duration-200">
+                                Get Started
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Hero section
+        const hero = document.createElement('section');
+        hero.className = 'relative min-h-screen flex items-center pt-16';
+        hero.innerHTML = `
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">
+                        <span class="block text-white">Transform Crypto Market Volatility</span>
+                        <span class="block mt-2 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">Into Consistent Profits</span>
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-8">
+                        Access premium signals with proven results. Our algorithm generated 
+                        <span class="font-bold text-green-400">258%</span> 
+                        return in just 4 months with carefully selected signals.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="#signup" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-green-500 to-green-400 hover:from-green-600 hover:to-green-500 shadow-lg hover:shadow-green-500/20 transition-all duration-200">
+                            Start Trading Now
+                        </a>
+                        <a href="#performance" class="inline-flex items-center justify-center px-6 py-3 border border-gray-700 text-base font-medium rounded-md text-gray-300 bg-gray-800/50 hover:bg-gray-800 transition-all duration-200">
+                            View Performance
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-b from-gray-900 via-blue-900/20 to-gray-900 z-0"></div>
+        `;
+
+        // Add components to page
+        app.appendChild(nav);
+        app.appendChild(hero);
+
+        // Initialize animations
+        const animateValue = (start, end, duration, element) => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const current = Math.floor(progress * (end - start) + start);
+                element.textContent = `${current}%`;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        // Observe elements for animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target.classList.contains('animate-on-scroll')) {
+                    entry.target.classList.add('animate-float');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+    </script>
+</body>
 </html>
