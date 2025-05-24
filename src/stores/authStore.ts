@@ -2,7 +2,9 @@ import { create } from 'zustand';
 
 export interface User {
   id: string;
+  name: string;
   email: string;
+  phone: string;
   subscriptionTier: 'basic' | 'pro' | 'premium';
 }
 
@@ -13,7 +15,7 @@ interface AuthState {
   
   initAuth: () => void;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, phone: string, password: string) => Promise<void>;
   logout: () => void;
   updateSubscription: (tier: 'basic' | 'pro' | 'premium') => void;
 }
@@ -23,7 +25,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   initialized: false,
   
-  // Initialize auth state from localStorage
   initAuth: () => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -34,22 +35,20 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
   
-  // Mock login function
   login: async (email: string, password: string) => {
-    // Simulate API call
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
-        // Demo authentication - would normally validate against a backend
         if (email && password.length >= 6) {
-          const user: User = {
-            id: `user_${Math.random().toString(36).substring(2, 9)}`,
-            email,
-            subscriptionTier: 'basic',
-          };
-          
-          localStorage.setItem('user', JSON.stringify(user));
-          set({ user, isAuthenticated: true });
-          resolve();
+          const storedUser = localStorage.getItem('user');
+          if (storedUser) {
+            const user = JSON.parse(storedUser);
+            if (user.email === email) {
+              set({ user, isAuthenticated: true });
+              resolve();
+              return;
+            }
+          }
+          reject(new Error('Invalid credentials'));
         } else {
           reject(new Error('Invalid credentials'));
         }
@@ -57,16 +56,15 @@ export const useAuthStore = create<AuthState>((set) => ({
     });
   },
   
-  // Mock register function
-  register: async (email: string, password: string) => {
-    // Simulate API call
+  register: async (name: string, email: string, phone: string, password: string) => {
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
-        // Demo registration - would normally send to a backend
-        if (email && password.length >= 6) {
+        if (name && email && phone && password.length >= 6) {
           const user: User = {
             id: `user_${Math.random().toString(36).substring(2, 9)}`,
+            name,
             email,
+            phone,
             subscriptionTier: 'basic',
           };
           
@@ -80,13 +78,11 @@ export const useAuthStore = create<AuthState>((set) => ({
     });
   },
   
-  // Logout
   logout: () => {
     localStorage.removeItem('user');
     set({ user: null, isAuthenticated: false });
   },
   
-  // Update subscription
   updateSubscription: (tier) => {
     set((state) => {
       if (!state.user) return state;
